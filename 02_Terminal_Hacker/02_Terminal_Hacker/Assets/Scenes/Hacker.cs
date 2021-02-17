@@ -1,9 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Hacker : MonoBehaviour
 {
+    //Game Data.
+    string[] level1Password = { "account", "transaction", "receipt", "cashflow", "routing"};
+    string[] level2Password = { "assaulted", "undercover", "tactical", "detective", "domestic" };
+    string[] level3Password = { "nevada", "extraterrestrial", "conspiracy", "theories", "oxcart" };
     // Game State.
     int level;
     enum Screen { MainMenu, Password, Win };
@@ -47,24 +52,11 @@ public class Hacker : MonoBehaviour
 
     void RunMainMenu(string input)
     {
-        if (input == "1")
+        bool isValidLevelNumber = (input == "1" || input == "2" || input == "3");
+        if(isValidLevelNumber)
         {
-            level = 1;
-            password = "cash";
+            level = int.Parse(input);
             StartGame();
-        }
-        else if (input == "2")
-        {
-            level = 2;
-            password = "agent";
-            StartGame();
-        }
-        else if (input == "3")
-        {
-            level = 3;
-            password = "alien";
-            StartGame();
-            
         }
         else if (input == "007")
         {
@@ -79,21 +71,91 @@ public class Hacker : MonoBehaviour
     void StartGame()
     {
         currentScreen = Screen.Password;
-        Terminal.WriteLine("You have selected level " + level);
+        Terminal.ClearScreen();
+        SelectPassword();
         Terminal.WriteLine("Please enter your password: ");
+    }
+
+    void Update()
+    {
+        int index = RandomPassword(level1Password);
+        print(index);
+    }
+
+    private void SelectPassword()
+    {
+        switch (level)
+        {
+
+            case 1:
+                password = level1Password[RandomPassword(level1Password)];
+                break;
+            case 2:
+                password = level2Password[RandomPassword(level2Password)];
+                break;
+            case 3:
+                password = level3Password[RandomPassword(level3Password)];
+                break;
+            default:
+                Debug.LogError("Invalid level number");
+                break;
+        }
+    }
+
+    private int RandomPassword(string[] password)
+    {
+        return Random.Range(0, password.Length);
     }
 
     void GetPassword(string input)
     {
-
         if(input == password)
         {
-            Terminal.WriteLine("Congrats on cracking the password!");
+            DisplayWinScreen();
+
         }
         else
         {
             Terminal.WriteLine("Try Again...");
-            StartGame();
         }
+    }
+
+    void DisplayWinScreen()
+    {
+        currentScreen = Screen.Win;
+        Terminal.ClearScreen();
+        ShowLevelReward();
+    }
+
+     void ShowLevelReward()
+    {
+        switch (level)
+        {
+            case 1:
+                Terminal.WriteLine("Cracked the level 1 password!");
+                Terminal.WriteLine("\n");
+                Terminal.WriteLine("Cash Money.");
+                Terminal.WriteLine("\n");
+                Terminal.WriteLine("Type 'menu' to return to main menu.");
+                break;
+            case 2:
+                Terminal.WriteLine("Cracked the level 2 password!");
+                Terminal.WriteLine("\n");
+                Terminal.WriteLine("Kill Confirmed!!");
+                Terminal.WriteLine("\n");
+                Terminal.WriteLine("Type 'menu' to return to main menu.");
+                break;
+            case 3:
+                Terminal.WriteLine("Cracked the level 3 password!");
+                Terminal.WriteLine("\n");
+                Terminal.WriteLine("We are not alone");
+                Terminal.WriteLine("\n");
+                Terminal.WriteLine("Type 'menu' to return to main menu.");
+                break;
+            default:
+                Terminal.WriteLine("Wrong password. Try Again.");
+                break;
+        } 
+        
     }
 }
