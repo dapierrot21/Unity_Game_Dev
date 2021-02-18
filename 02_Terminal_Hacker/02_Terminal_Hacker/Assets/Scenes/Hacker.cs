@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using UnityEngine;
 
@@ -73,14 +74,10 @@ public class Hacker : MonoBehaviour
         currentScreen = Screen.Password;
         Terminal.ClearScreen();
         SelectPassword();
-        Terminal.WriteLine("Please enter your password: ");
+        Terminal.WriteLine("Enter your password: " + password.Anagram());
     }
 
-    void Update()
-    {
-        int index = RandomPassword(level1Password);
-        print(index);
-    }
+
 
     private void SelectPassword()
     {
@@ -116,7 +113,7 @@ public class Hacker : MonoBehaviour
         }
         else
         {
-            Terminal.WriteLine("Try Again...");
+            StartGame();
         }
     }
 
@@ -136,26 +133,31 @@ public class Hacker : MonoBehaviour
                 Terminal.WriteLine("\n");
                 Terminal.WriteLine("Cash Money.");
                 Terminal.WriteLine("\n");
-                Terminal.WriteLine("Type 'menu' to return to main menu.");
+                StartGameOver();
                 break;
             case 2:
                 Terminal.WriteLine("Cracked the level 2 password!");
                 Terminal.WriteLine("\n");
                 Terminal.WriteLine("Kill Confirmed!!");
                 Terminal.WriteLine("\n");
-                Terminal.WriteLine("Type 'menu' to return to main menu.");
+                StartGameOver();
                 break;
             case 3:
                 Terminal.WriteLine("Cracked the level 3 password!");
                 Terminal.WriteLine("\n");
                 Terminal.WriteLine("We are not alone");
                 Terminal.WriteLine("\n");
-                Terminal.WriteLine("Type 'menu' to return to main menu.");
+                StartGameOver();
                 break;
             default:
                 Terminal.WriteLine("Wrong password. Try Again.");
                 break;
         } 
         
+    }
+
+    void StartGameOver()
+    {
+        Terminal.WriteLine("Type 'menu' to return to main menu.");
     }
 }
