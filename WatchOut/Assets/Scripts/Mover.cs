@@ -22,9 +22,9 @@ public class Mover : MonoBehaviour
     {
         //Distance Per Second: FPS * DOF * moveSpeed
         float xValue = Input.GetAxis("Horizontal") * Time.deltaTime * moveSpeed;
-        float zFloat = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
+        float zValue = Input.GetAxis("Vertical") * Time.deltaTime * moveSpeed;
 
         // Accessing Player(Cubeman) object.
-        transform.Translate(xValue, 0, zFloat);
+        transform.Translate(xValue, 0, zValue);
     }
 }
