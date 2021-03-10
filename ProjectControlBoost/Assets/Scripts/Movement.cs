@@ -5,39 +5,54 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    Rigidbody rb;
+    [SerializeField] float thrust = 1000;
+    [SerializeField] float rotationForce = 100;
+  
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        ProcessThrust();
-        ProcessRotation();
+        ThrustRocket();
+        RotateRocket();
     }
 
-    private void ProcessRotation()
+    private void RotateRocket()
     {
         // Left Arrow
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
-            Debug.Log("Pressing Left arrow.");
+            // Frame rate independent.
+            ControlRotate(rotationForce);
         }
         // Right Arrow
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            Debug.Log("Pressing Right arrow");
+            // Frame rate indenpendent.
+            ControlRotate(-rotationForce);
         }
     }
 
-    private void ProcessThrust()
+    private void ControlRotate(float rotationThisFrame)
+    {
+        rb.freezeRotation = true; // freezing rotation so we can manually rotate.
+        transform.Rotate(Vector3.forward * rotationThisFrame * Time.deltaTime);
+        rb.freezeRotation = false; // unfreezing rotation so the physics system can take over.
+    }
+
+    private void ThrustRocket()
     {
         // Space bar
         if(Input.GetKey(KeyCode.Space))
         {
-            Debug.Log("Press Space... Lift off");
+            // x, y, z
+            rb.AddRelativeForce(Vector3.up * thrust * Time.deltaTime);
         }
     }
 }
