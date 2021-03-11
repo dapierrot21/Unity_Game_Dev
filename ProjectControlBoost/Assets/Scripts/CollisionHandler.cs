@@ -4,6 +4,17 @@ using UnityEngine.SceneManagement;
 
 public class CollisionHandler : MonoBehaviour
 {
+    [SerializeField] float delaySeconds = 1f;
+    [SerializeField] AudioClip crashLanding;
+    [SerializeField] AudioClip successfulLanding;
+
+    AudioSource audio;
+
+    void Start()
+    {
+        audio = GetComponent<AudioSource>();
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         switch(collision.gameObject.tag)
@@ -12,16 +23,35 @@ public class CollisionHandler : MonoBehaviour
                 Debug.Log("Your on the launch pad");
                 break;
             case "Finish":
-                NextLevel();
+                SuccessLanding();
                 break;
             default:
-                ReloadLevel(); 
+                StartCrashSequence(); 
                 break;
 
         }
     }
 
-    private void NextLevel()
+    void SuccessLanding()
+    {
+        audio.PlayOneShot(successfulLanding);
+        // Disable controls after landing.
+        GetComponent<Movement>().enabled = false;
+        // Waiting 1secs before loading of next level.
+        Invoke("NextLevel", delaySeconds);
+    }
+
+    void StartCrashSequence()
+    {
+ 
+        audio.PlayOneShot(crashLanding);
+        // Disable controls after crash.
+        GetComponent<Movement>().enabled = false;
+        // Waiting 1secs before loading of next level.
+        Invoke("ReloadLevel", delaySeconds);
+    }
+
+    void NextLevel()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextScenceNumber = currentSceneIndex + 1;
@@ -36,7 +66,7 @@ public class CollisionHandler : MonoBehaviour
     }
 
     // If rocket crash reload scene.
-    private static void ReloadLevel()
+    void ReloadLevel()
     {
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
