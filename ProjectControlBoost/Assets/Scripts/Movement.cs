@@ -6,8 +6,8 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
 
-    [SerializeField] float thrust = 100f;
-    [SerializeField] float rotationForce = 1f;
+    [SerializeField] float thrust = 1000f;
+    [SerializeField] float rotationForce = 100f;
     [SerializeField] AudioClip mainEngine;
 
     Rigidbody rb;

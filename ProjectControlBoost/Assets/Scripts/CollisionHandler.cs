@@ -10,6 +10,7 @@ public class CollisionHandler : MonoBehaviour
 
     AudioSource audio;
 
+    bool isTransitioning = false;
     void Start()
     {
         audio = GetComponent<AudioSource>();
@@ -17,6 +18,8 @@ public class CollisionHandler : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if(isTransitioning) { return; }
+
         switch(collision.gameObject.tag)
         {
             case "Friendly":
@@ -34,16 +37,17 @@ public class CollisionHandler : MonoBehaviour
 
     void SuccessLanding()
     {
+        isTransitioning = true;
+        audio.Stop();
         audio.PlayOneShot(successfulLanding);
-        // Disable controls after landing.
-        GetComponent<Movement>().enabled = false;
-        // Waiting 1secs before loading of next level.
-        Invoke("NextLevel", delaySeconds);
+        GetComponent<Movement>().enabled = false;  // Disable controls after landing.
+        Invoke("NextLevel", delaySeconds);  // Waiting 1secs before loading of next level.
     }
 
     void StartCrashSequence()
     {
- 
+        isTransitioning = true;
+        audio.Stop();
         audio.PlayOneShot(crashLanding);
         // Disable controls after crash.
         GetComponent<Movement>().enabled = false;
