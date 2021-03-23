@@ -39,29 +39,33 @@ public class Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             // Frame rate independent.
-            ControlRotate(rotationForce);
-            // Left booster particles.
-            if(!leftBoosterParticles.isPlaying)
-            {
-                leftBoosterParticles.Play();
-            }
-            
+            RotateLeft();
+
         }
         // Right Arrow
         else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             // Frame rate indenpendent.
-            ControlRotate(-rotationForce);
-            // Right booster paticles.
-            if(!rightBoosterParticles.isPlaying)
-            {
-                rightBoosterParticles.Play();
-            }
+            RotateRight();
         }
         else
         {
-            rightBoosterParticles.Stop();
-            leftBoosterParticles.Stop();
+            StopRotating();
+        }
+    }
+
+    private void ThrustRocket()
+    {
+        // Space bar
+        if (Input.GetKey(KeyCode.Space))
+        {
+            // x, y, z
+            StartThrusting();
+
+        }
+        else
+        {
+            StopThrusting();
         }
     }
 
@@ -72,29 +76,51 @@ public class Movement : MonoBehaviour
         rb.freezeRotation = false; // unfreezing rotation so the physics system can take over.
     }
 
-    private void ThrustRocket()
+    private void StopRotating()
     {
-        // Space bar
-        if(Input.GetKey(KeyCode.Space))
+        rightBoosterParticles.Stop();
+        leftBoosterParticles.Stop();
+    }
+
+    private void RotateRight()
+    {
+        ControlRotate(-rotationForce);
+        // Right booster paticles.
+        if (!rightBoosterParticles.isPlaying)
         {
-            // x, y, z
-            rb.AddRelativeForce(Vector3.up * thrust * Time.deltaTime);
-            
-            if (!audio.isPlaying)
-            {
-                audio.PlayOneShot(mainEngine);
-                
-            }
-            if(!mainBoosterParticles.isPlaying)
-            {
-                mainBoosterParticles.Play();
-            }
-            
-        }
-        else
-        {
-            audio.Stop();
-            mainBoosterParticles.Stop();
+            rightBoosterParticles.Play();
         }
     }
+
+    private void RotateLeft()
+    {
+        ControlRotate(rotationForce);
+        // Left booster particles.
+        if (!leftBoosterParticles.isPlaying)
+        {
+            leftBoosterParticles.Play();
+        }
+    }
+
+    private void StartThrusting()
+    {
+        rb.AddRelativeForce(Vector3.up * thrust * Time.deltaTime);
+
+        if (!audio.isPlaying)
+        {
+            audio.PlayOneShot(mainEngine);
+
+        }
+        if (!mainBoosterParticles.isPlaying)
+        {
+            mainBoosterParticles.Play();
+        }
+    }
+
+    private void StopThrusting()
+    {
+        audio.Stop();
+        mainBoosterParticles.Stop();
+    }
+
 }
